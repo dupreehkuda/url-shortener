@@ -19,7 +19,7 @@ func trimmer(path string) int {
 	return i
 }
 
-func ApiResponse(storage map[int]string) http.HandlerFunc {
+func APIResponse(storage map[int]string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:

@@ -10,6 +10,6 @@ import (
 func main() {
 	storage := storage.New()
 
-	http.HandleFunc("/", handlers.ApiResponse(storage.Shortened))
+	http.HandleFunc("/", handlers.APIResponse(storage.Shortened))
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

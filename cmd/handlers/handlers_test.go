@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func TestApiResponse(t *testing.T) {
+func TestAPIResponse(t *testing.T) {
 	type storage map[int]string
 
 	type want struct {
@@ -42,10 +42,12 @@ func TestApiResponse(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			request := httptest.NewRequest(http.MethodPost, tt.request, bytes.NewBuffer([]byte(tt.data)))
 			w := httptest.NewRecorder()
-			h := http.HandlerFunc(ApiResponse(storage{}))
+			h := http.HandlerFunc(APIResponse(storage{}))
 			h.ServeHTTP(w, request)
 			result := w.Result()
 
+			defer result.Body.Close()
+			
 			body, err := ioutil.ReadAll(result.Body)
 			if err != nil {
 				log.Fatalln(err)
