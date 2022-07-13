@@ -3,13 +3,16 @@ package main
 import (
 	"github.com/dupreehkuda/url-shortener/cmd/handlers"
 	"github.com/dupreehkuda/url-shortener/cmd/storage"
-	"log"
-	"net/http"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	storage := storage.New()
 
-	http.HandleFunc("/", handlers.APIResponse(storage.Shortened))
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	r := gin.Default()
+
+	r.GET("/:id", handlers.GetShortened(storage.Shortened))
+	r.POST("/", handlers.PostShorten(storage.Shortened))
+
+	r.Run()
 }
