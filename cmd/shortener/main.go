@@ -1,15 +1,15 @@
 package main
 
 import (
-	"github.com/dupreehkuda/url-shortener/cmd/handlers"
-	"github.com/dupreehkuda/url-shortener/cmd/storage"
-	"github.com/gin-gonic/gin"
+	"github.com/dupreehkuda/url-shortener/internal/handlers"
+	"github.com/dupreehkuda/url-shortener/internal/server"
+	"github.com/dupreehkuda/url-shortener/internal/storage"
 )
 
 func main() {
 	storage := storage.New()
 
-	r := gin.Default()
+	r := server.GetRouter()
 
 	r.GET("/:id", handlers.GetShortened(storage.Shortened))
 	r.POST("/", handlers.PostShorten(storage.Shortened))
