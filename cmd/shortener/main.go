@@ -4,15 +4,14 @@ import (
 	"github.com/dupreehkuda/url-shortener/internal/handlers"
 	"github.com/dupreehkuda/url-shortener/internal/server"
 	"github.com/dupreehkuda/url-shortener/internal/storage"
+	"log"
 )
 
 func main() {
 	storage := storage.New()
+	service := handlers.New(storage)
 
-	r := server.GetRouter()
+	server := server.New(service).GetRouter()
 
-	r.GET("/:id", handlers.GetShortened(storage.Shortened))
-	r.POST("/", handlers.PostShorten(storage.Shortened))
-
-	r.Run()
+	log.Fatal(server.Run())
 }

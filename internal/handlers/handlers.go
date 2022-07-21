@@ -4,41 +4,65 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
+	"log"
 	"net/http"
-	"strconv"
 )
 
-func GetShortened(storage map[int]string) gin.HandlerFunc {
+type Storer interface {
+	Get(id string) (string, error)
+	Create(link string) (string, error)
+}
+
+type handlers struct {
+	storage Storer
+}
+
+func New(storage Storer) *handlers {
+	return &handlers{storage: storage}
+}
+
+// GetShortened - обрабатываем Get-запрос и переадресуем пользователя
+func (h handlers) GetShortened() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
-		id, err := strconv.Atoi(c.Param("id"))
+		id := c.Param("id")
+
+		ans, err := h.storage.Get(id)
 		if err != nil {
-			return
-		}
-
-		if len(storage) == 0 || id == 0 || storage[id] == "" {
 			c.Data(http.StatusBadRequest, "text/plain; charset=utf-8", []byte("Can't find url requested"))
+			log.Printf("Got: %v, Recieved error: %v", id, err)
 			return
 		}
 
-		c.Header("Location", storage[id])
+		c.Header("Location", ans)
 		c.JSON(http.StatusTemporaryRedirect, nil)
+
+		log.Printf("Redirected to %v", ans)
 	}
 
 	return gin.HandlerFunc(fn)
 }
 
-func PostShorten(storage map[int]string) gin.HandlerFunc {
+// PostShorten - обрабатываем Post-запрос и возвращаем ответ
+func (h handlers) PostShorten() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
 		b, err := io.ReadAll(c.Request.Body)
 
 		if err != nil || len(b) == 0 {
 			c.JSON(http.StatusBadRequest, nil)
+			log.Printf("Recieved error while reading body: %v", err)
 			return
 		}
 
-		storage[len(storage)+1] = string(b)
-		string := fmt.Sprintf("http://localhost:8080/%v", len(storage))
-		c.Data(http.StatusCreated, "text/plain; charset=utf-8", []byte(string))
+		ans, err := h.storage.Create(string(b))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, nil)
+			log.Printf("Recieved error: %v", err)
+			return
+		}
+
+		responseText := fmt.Sprintf("http://localhost:8080/%v", ans)
+		log.Printf("New link responce: %s", responseText)
+		c.Data(http.StatusCreated, "text/plain; charset=utf-8", []byte(responseText))
 	}
 
 	return gin.HandlerFunc(fn)
