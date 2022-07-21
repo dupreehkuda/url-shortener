@@ -7,7 +7,7 @@ import (
 )
 
 type storage struct {
-	mtx       *sync.RWMutex
+	mtx       sync.RWMutex
 	shortened map[string]string
 }
 
@@ -16,20 +16,20 @@ func New() *storage {
 }
 
 // Get - выдаем нужную ссылку по id, который получили.
-func (s storage) Get(id string) (string, error) {
+func (s *storage) Get(id string) (string, error) {
 	if len(s.shortened) == 0 || len(id) == 0 || s.shortened[id] == "" {
-		return "", errors.New("Can't find url requested")
+		return "", errors.New("can't find url requested")
 	}
 
 	return s.shortened[id], nil
 }
 
 // Create - проверям есть ли ссылка и записываем в хранилище
-func (s storage) Create(link string) (string, error) {
+func (s *storage) Create(link string) (string, error) {
 	codedName := randSymbols(5)
 
 	if _, ok := s.shortened[codedName]; ok {
-		return "", errors.New("this codename exists")
+		return "", errors.New("this codename already exists")
 	}
 
 	key, exist := checkForValue(link, s.shortened)
