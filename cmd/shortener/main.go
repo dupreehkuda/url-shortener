@@ -1,15 +1,17 @@
 package main
 
 import (
-	"github.com/dupreehkuda/url-shortener/cmd/handlers"
-	"github.com/dupreehkuda/url-shortener/cmd/storage"
+	"github.com/dupreehkuda/url-shortener/internal/handlers"
+	"github.com/dupreehkuda/url-shortener/internal/server"
+	"github.com/dupreehkuda/url-shortener/internal/storage"
 	"log"
-	"net/http"
 )
 
 func main() {
 	storage := storage.New()
+	service := handlers.New(storage)
 
-	http.HandleFunc("/", handlers.APIResponse(storage.Shortened))
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	server := server.New(service).GetRouter()
+
+	log.Fatal(server.Run())
 }
