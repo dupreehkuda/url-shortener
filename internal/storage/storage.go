@@ -21,6 +21,8 @@ func (s *storage) Get(id string) (string, error) {
 		return "", errors.New("can't find url requested")
 	}
 
+	s.mtx.RLock()
+	defer s.mtx.RUnlock()
 	return s.shortened[id], nil
 }
 
