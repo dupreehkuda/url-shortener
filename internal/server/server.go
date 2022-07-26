@@ -8,6 +8,7 @@ import (
 type Handlers interface {
 	GetShortened() gin.HandlerFunc
 	PostShorten() gin.HandlerFunc
+	PostJson() gin.HandlerFunc
 }
 
 type server struct {
@@ -23,6 +24,7 @@ func (s *server) GetRouter() *gin.Engine {
 
 	r.GET("/:id", s.handlers.GetShortened())
 	r.POST("/", s.handlers.PostShorten())
+	r.POST("/api/shorten", s.handlers.PostJson())
 
 	log.Printf("Server created")
 	return r
