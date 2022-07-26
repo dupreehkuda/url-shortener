@@ -14,6 +14,10 @@ func main() {
 
 	server := server.New(service).GetRouter()
 
-	address := os.Getenv("SERVER_ADDRESS")
+	address, isPresent := os.LookupEnv("SERVER_ADDRESS")
+	if isPresent != true {
+		address = "localhost:8080"
+	}
+
 	log.Fatal(server.Run(address))
 }

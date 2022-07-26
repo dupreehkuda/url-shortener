@@ -71,6 +71,11 @@ func (h handlers) PostShorten() gin.HandlerFunc {
 		}
 
 		address := os.Getenv("SERVER_ADDRESS")
+		address, isPresent := os.LookupEnv("SERVER_ADDRESS")
+		if isPresent != true {
+			address = "localhost:8080"
+		}
+
 		responseText := fmt.Sprintf("http://%v/%v", address, ans)
 		log.Printf("New link responce: %s", responseText)
 		c.Data(http.StatusCreated, "text/plain; charset=utf-8", []byte(responseText))
@@ -104,6 +109,11 @@ func (h handlers) ShortenJSON() gin.HandlerFunc {
 		}
 
 		address := os.Getenv("SERVER_ADDRESS")
+		address, isPresent := os.LookupEnv("SERVER_ADDRESS")
+		if isPresent != true {
+			address = "localhost:8080"
+		}
+
 		responseText := fmt.Sprintf("http://%v/%v", address, ans)
 		log.Printf("New link responce: %s", responseText)
 
