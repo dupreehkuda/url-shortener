@@ -70,9 +70,8 @@ func (h handlers) PostShorten() gin.HandlerFunc {
 			return
 		}
 
-		address := os.Getenv("SERVER_ADDRESS")
 		address, isPresent := os.LookupEnv("SERVER_ADDRESS")
-		if isPresent != true {
+		if !isPresent {
 			address = "localhost:8080"
 		}
 
@@ -108,9 +107,8 @@ func (h handlers) ShortenJSON() gin.HandlerFunc {
 			return
 		}
 
-		address := os.Getenv("SERVER_ADDRESS")
 		address, isPresent := os.LookupEnv("SERVER_ADDRESS")
-		if isPresent != true {
+		if !isPresent {
 			address = "localhost:8080"
 		}
 
