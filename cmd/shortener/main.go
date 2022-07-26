@@ -5,6 +5,7 @@ import (
 	"github.com/dupreehkuda/url-shortener/internal/server"
 	"github.com/dupreehkuda/url-shortener/internal/storage"
 	"log"
+	"os"
 )
 
 func main() {
@@ -13,5 +14,6 @@ func main() {
 
 	server := server.New(service).GetRouter()
 
-	log.Fatal(server.Run())
+	address := os.Getenv("SERVER_ADDRESS")
+	log.Fatal(server.Run(address))
 }
