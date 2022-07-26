@@ -23,7 +23,7 @@ func New(storage Storer) *handlers {
 }
 
 type ReqJSON struct {
-	Url string `json:"url"`
+	URL string `json:"url"`
 }
 
 type ResJSON struct {
@@ -78,7 +78,7 @@ func (h handlers) PostShorten() gin.HandlerFunc {
 }
 
 // PostJSON - обрабатываем Post-запрос в формате json и возвращаем json
-func (h handlers) PostJson() gin.HandlerFunc {
+func (h handlers) ShortenJSON() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
 		b, err := io.ReadAll(c.Request.Body)
 
@@ -94,7 +94,7 @@ func (h handlers) PostJson() gin.HandlerFunc {
 			return
 		}
 
-		ans, err := h.storage.Create(reqData.Url)
+		ans, err := h.storage.Create(reqData.URL)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, nil)
 			log.Printf("Recieved error: %v", err)
