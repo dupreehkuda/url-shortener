@@ -110,7 +110,7 @@ func (h handlers) PostJson() gin.HandlerFunc {
 			return
 		}
 
-		c.Data(http.StatusOK, "application/json", resData)
+		c.Data(http.StatusCreated, "application/json", resData)
 	}
 	return gin.HandlerFunc(fn)
 }
