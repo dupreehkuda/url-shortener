@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 )
 
 type Storer interface {
@@ -69,7 +70,12 @@ func (h handlers) PostShorten() gin.HandlerFunc {
 			return
 		}
 
-		responseText := fmt.Sprintf("http://localhost:8080/%v", ans)
+		address, isPresent := os.LookupEnv("SERVER_ADDRESS")
+		if !isPresent {
+			address = "localhost:8080"
+		}
+
+		responseText := fmt.Sprintf("http://%v/%v", address, ans)
 		log.Printf("New link responce: %s", responseText)
 		c.Data(http.StatusCreated, "text/plain; charset=utf-8", []byte(responseText))
 	}
@@ -101,7 +107,12 @@ func (h handlers) ShortenJSON() gin.HandlerFunc {
 			return
 		}
 
-		responseText := fmt.Sprintf("http://localhost:8080/%v", ans)
+		address, isPresent := os.LookupEnv("SERVER_ADDRESS")
+		if !isPresent {
+			address = "localhost:8080"
+		}
+
+		responseText := fmt.Sprintf("http://%v/%v", address, ans)
 		log.Printf("New link responce: %s", responseText)
 
 		resData, err := json.Marshal(ResJSON{Result: responseText})
