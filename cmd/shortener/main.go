@@ -18,7 +18,6 @@ var cfg struct {
 func main() {
 
 	var err = env.Parse(&cfg)
-
 	if err != nil {
 		log.Println(err)
 	}
