@@ -1,4 +1,4 @@
-package storage
+package memstore
 
 import (
 	"sync"
@@ -25,12 +25,12 @@ func Test_storage_Create(t *testing.T) {
 		fields: fields{
 			mtx: sync.RWMutex{},
 			shortened: map[string]string{
-				"rfBd6": "https://youtube.com/",
+				"SgD6xAV": "https://youtube.com/",
 			},
 		},
 		args:    args{link: "https://youtube.com/"},
-		want:    "",
-		wantErr: true,
+		want:    "SgD6xAV",
+		wantErr: false,
 	}
 	t.Run(test.name, func(t *testing.T) {
 		s := storage{

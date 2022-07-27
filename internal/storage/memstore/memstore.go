@@ -1,4 +1,4 @@
-package storage
+package memstore
 
 import (
 	"errors"
@@ -26,9 +26,9 @@ func (s *storage) Get(id string) (string, error) {
 	return s.shortened[id], nil
 }
 
-// Create - проверям есть ли ссылка и записываем в хранилище
+// Create - проверям есть ли ссылка и записываем в хранилище.
 func (s *storage) Create(link string) (string, error) {
-	codedName := randSymbols(5)
+	codedName := randSymbols(7)
 
 	if _, ok := s.shortened[codedName]; ok {
 		return "", errors.New("this codename already exists")
